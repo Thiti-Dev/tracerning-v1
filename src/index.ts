@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import express from 'express';
+import morgan from 'morgan';
 import * as dotenv from 'dotenv';
 
 // Load env vars
@@ -18,6 +19,15 @@ const app = express();
 
 const run_server = (async () => {
 	await connectDatabase(); //connect to the database
+
+	//
+	// ─── MIDDLEWARE ─────────────────────────────────────────────────────────────────
+	//
+	if (process.env.NODE_ENV === 'development') {
+		app.use(morgan('dev'));
+	}
+
+	// ────────────────────────────────────────────────────────────────────────────────
 
 	//
 	// ─── SERVER LISTENER ────────────────────────────────────────────────────────────
