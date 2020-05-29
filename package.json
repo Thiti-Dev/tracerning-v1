@@ -1,0 +1,25 @@
+{
+	"name": "tracerning",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "ts-node-dev --respawn src/index.ts",
+		"dev": "nodemon --exec ts-node src/index.ts",
+		"build": "tsc"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/express": "^4.17.6",
+		"nodemon": "^2.0.4",
+		"ts-node": "^8.10.2",
+		"ts-node-dev": "^1.0.0-pre.44",
+		"typescript": "^3.9.3"
+	},
+	"dependencies": {
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1"
+	}
+}
