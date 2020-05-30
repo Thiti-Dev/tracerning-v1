@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import mongoose, { Document, Schema, model, Model } from 'mongoose';
 
 const UserSchema: Schema = new Schema({
@@ -41,6 +42,22 @@ interface IUser extends Document {
 	createdAt: Date;
 }
 
-var UserModel: Model<IUser> = model<IUser>('User', UserSchema);
 
+
+//
+// ─── MIDDLEWARE ─────────────────────────────────────────────────────────────────
+//
+
+UserSchema.pre<IUser>('save',async function(next): Promise<void>{
+	console.log('here')
+	if(!this.isModified('password')){
+		next();
+	}
+	const salt : string = await bcrypt.genSalt(10);
+	this.password = await bcrypt.hash(this.password, salt);
+})
+
+// ────────────────────────────────────────────────────────────────────────────────
+
+var UserModel: Model<IUser> = model<IUser>('User', UserSchema);
 export default UserModel;
