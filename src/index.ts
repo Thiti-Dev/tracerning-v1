@@ -15,6 +15,12 @@ import * as logger from './utils/dev/logger';
 //@database
 import connectDatabase from './db/index';
 
+//@routes-importing
+import authorization from './routes/authorization';
+
+//@middleware-importing
+import errHandler from './middleware/errorHandler'
+
 const app = express();
 
 const run_server = (async () => {
@@ -26,8 +32,18 @@ const run_server = (async () => {
 	if (process.env.NODE_ENV === 'development') {
 		app.use(morgan('dev'));
 	}
+	app.use(express.json()); //embedded parser
 
 	// ────────────────────────────────────────────────────────────────────────────────
+
+	//
+	// ─── SET UP ROUTE ───────────────────────────────────────────────────────────────
+	//
+	app.use('/api/authorization', authorization);
+	// ────────────────────────────────────────────────────────────────────────────────
+
+	//@Error-Handler
+	app.use(errHandler)
 
 	//
 	// ─── SERVER LISTENER ────────────────────────────────────────────────────────────
