@@ -16,6 +16,11 @@ interface RegisterCredentials{
 	username: string,
 	password: string
 }
+
+interface LoginCredentials{
+	email: string,
+	password: string
+}
 // ────────────────────────────────────────────────────────────────────────────────
 
 
@@ -37,4 +42,31 @@ export const registerUser = asyncWrap(async function(req, res, next) {
 			password
 	});
 	res.status(200).json({ success: true, data: user_created });
+})
+
+export const loginUser = asyncWrap(async function(req, res, next) {
+	const {email,password} : LoginCredentials = req.body
+
+	//@HARDCODING VALIDATION => WILL BE REMOVED LATER
+
+	if(!email || !password){
+		return next(new ErrorResponse('Invalid request body => need (email,password)',400))
+	}
+
+	// ────────────────────────────────────────────────────────────────────────────────
+
+	const user = await User.findOne({email}).select('+password') // included hidden field
+
+	if(!user){
+		return next(new ErrorResponse(`Invalid email or password`,401))
+	}
+
+	if(!await user.matchPassword(password)){
+		return next(new ErrorResponse(`Invalid email or password`,401))
+	}
+
+	//@Cached user credentials in the session
+	req.session!.cached_credentials = user
+
+	res.status(200).json({ success: true, data: user });
 })
