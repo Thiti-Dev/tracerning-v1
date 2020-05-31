@@ -1,7 +1,7 @@
-const asyncWrap = (fn: (...args: any) => any) =>
-    function asyncHandlerWrap(...args: any){
-        const fnReturn = fn(...args)
-        const next = args[args.length-1]
+import { NextFunction, Request, Response } from 'express';
+const asyncWrap = (fn: (req: Request,res: Response,next: NextFunction,...arg:any[]) => Promise<any>) =>
+    function asyncHandlerWrap(req: Request,res: Response,next: NextFunction,...arg:any[]){
+        const fnReturn = fn(req,res,next,...arg)
         return Promise.resolve(fnReturn).catch(next)
     }
 
