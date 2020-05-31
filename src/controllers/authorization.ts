@@ -19,7 +19,7 @@ interface LoginCredentials{
 // ────────────────────────────────────────────────────────────────────────────────
 
 
-export const registerUser = asyncWrap(async function(req: Request, res: Response, next: NextFunction) {
+export const registerUser = asyncWrap(async function(req, res, next) {
 	const {email,username,password} : LoginCredentials = req.body
 
 	//@HARDCODING VALIDATION => WILL BE REMOVED LATER
