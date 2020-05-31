@@ -33,13 +33,20 @@ const UserSchema: Schema = new Schema({
 	}
 });
 
-interface IUser extends Document {
+//@Based schema
+interface IUserSchema extends Document {
 	email: string;
 	role: string;
 	username: string;
 	password: string;
 	photo: string;
 	createdAt: Date;
+
+}
+
+//@Declaring all instance methods
+interface IUserModel extends IUserSchema{
+	matchPassword(enteredPassword:string): Promise<boolean>
 }
 
 
@@ -48,7 +55,7 @@ interface IUser extends Document {
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────────────────
 //
 
-UserSchema.pre<IUser>('save',async function(next): Promise<void>{
+UserSchema.pre<IUserModel>('save',async function(next): Promise<void>{
 	if(!this.isModified('password')){
 		next();
 	}
@@ -58,5 +65,15 @@ UserSchema.pre<IUser>('save',async function(next): Promise<void>{
 
 // ────────────────────────────────────────────────────────────────────────────────
 
-var UserModel: Model<IUser> = model<IUser>('User', UserSchema);
+//
+// ─── INSTANCE METHODS ───────────────────────────────────────────────────────────
+//
+UserSchema.methods.matchPassword = async function(enteredPassword: string): Promise<boolean> {
+	return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// ────────────────────────────────────────────────────────────────────────────────
+
+
+var UserModel: Model<IUserModel> = model<IUserModel>('User', UserSchema);
 export default UserModel;
