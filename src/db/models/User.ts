@@ -49,7 +49,6 @@ interface IUser extends Document {
 //
 
 UserSchema.pre<IUser>('save',async function(next): Promise<void>{
-	console.log('here')
 	if(!this.isModified('password')){
 		next();
 	}
