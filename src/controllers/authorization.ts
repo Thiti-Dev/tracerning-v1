@@ -11,7 +11,7 @@ import User from '../db/models/User';
 //
 // ─── INTERFACES ─────────────────────────────────────────────────────────────────
 //
-interface LoginCredentials{
+interface RegisterCredentials{
 	email: string,
 	username: string,
 	password: string
@@ -20,7 +20,7 @@ interface LoginCredentials{
 
 
 export const registerUser = asyncWrap(async function(req, res, next) {
-	const {email,username,password} : LoginCredentials = req.body
+	const {email,username,password} : RegisterCredentials = req.body
 
 	//@HARDCODING VALIDATION => WILL BE REMOVED LATER
 
