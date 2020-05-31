@@ -15,6 +15,16 @@ import * as logger from './utils/dev/logger';
 //@database
 import connectDatabase from './db/index';
 
+//@Session
+import session from 'express-session'
+
+//@Declare&Import persist session by connecting to mongoose
+var MongoDBStore = require('connect-mongodb-session')(session);
+var store = new MongoDBStore({
+	uri: process.env.MONGO_URI,
+	collection: 'cachedSessions'
+  });
+
 //@routes-importing
 import authorization from './routes/authorization';
 
@@ -33,6 +43,17 @@ const run_server = (async () => {
 		app.use(morgan('dev'));
 	}
 	app.use(express.json()); //embedded parser
+
+	app.use(session({ 
+		secret: 'super secret', 
+		resave: false, 
+		saveUninitialized: true,
+		cookie: {
+			maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+		  },
+		  store: store,
+	   })
+	  )
 
 	// ────────────────────────────────────────────────────────────────────────────────
 
