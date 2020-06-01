@@ -49,3 +49,10 @@ export const getBlogData = asyncWrap(async function(req,res,next){
     return res.status(200).json({ success: true, data: target_blog_data });
 })
 
+
+export const deleteBlog = asyncWrap(async function(req,res,next){
+    const {blogId} = req.params
+    const remove_res = await Blog.findByIdAndRemove(blogId)
+    return res.status(200).json({ success: true, data: remove_res });
+})
+
