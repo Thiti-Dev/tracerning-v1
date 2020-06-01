@@ -28,6 +28,9 @@ const BlogSchema: Schema = new Schema({
 
 //@Based schema
 interface IBlogSchema extends Document {
+    _update: {
+        [key: string]: any;
+    };
     user: Schema.Types.ObjectId;
     slug: string;
 	title: string;
@@ -41,6 +44,14 @@ BlogSchema.pre<IBlogSchema>('save', function(next) {
 	this.slug = slugify(this.title, { lower: true });
 	next();
 });
+BlogSchema.pre<IBlogSchema>('findOneAndUpdate', function(next) {
+    if(!this._update.title){
+		next();
+    }
+	this._update.slug = slugify(this._update.title, { lower: true });
+	next();
+});
+
 
 var BlogModel: Model<IBlogSchema> = model<IBlogSchema>('Blog', BlogSchema);
 export default BlogModel;
