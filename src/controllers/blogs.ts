@@ -55,12 +55,26 @@ export const getBlogData = asyncWrap(async function(req,res,next){
 
 export const deleteBlog = asyncWrap(async function(req,res,next){
     const {blogId} = req.params
+    const target_blog_data = await Blog.findById(blogId)
+    if(!target_blog_data){
+        return next(new ErrorResponse(`Blog_id:${blogId} isn't exist in the database`,404))
+    }
+    if(target_blog_data.user.toString() !== req.user?._id.toString()){
+        return next(new ErrorResponse(`You have no right to do this action`,401))
+    }
     const remove_res = await Blog.findByIdAndRemove(blogId)
-    return res.status(200).json({ success: true, data: remove_res });
+    return res.status(200).json({ success: true, data: null });
 })
 
 export const editBlog = asyncWrap(async function(req,res,next){
     const {blogId} = req.params
+    const target_blog_data = await Blog.findById(blogId)
+    if(!target_blog_data){
+        return next(new ErrorResponse(`Blog_id:${blogId} isn't exist in the database`,404))
+    }
+    if(target_blog_data.user.toString() !== req.user?._id.toString()){
+        return next(new ErrorResponse(`You have no right to do this action`,401))
+    }
     const update_res = await Blog.findOneAndUpdate({_id:blogId},objectKeyFilter(req.body,['title','content']),{new:true,runValidators:true}) // 've been avoid using findByIdAndUpdate because it's not gonna trigger the hook of the mongoose
     return res.status(200).json({ success: true, data: update_res });
 })
