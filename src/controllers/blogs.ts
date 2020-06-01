@@ -34,3 +34,18 @@ export const getBlogOfUser = asyncWrap(async function(req,res,next){
     const user_blogs = await Blog.find({user:target_user._id})
     return res.status(200).json({ success: true, data: user_blogs });
 })
+
+
+export const getBlogData = asyncWrap(async function(req,res,next){
+    const {username,slug} = req.params
+    const target_user = await User.findOne({username})
+    if(!target_user){
+        return next(new ErrorResponse(`User:${username} isn't exist in the database`,404))
+    }
+    const target_blog_data = await Blog.findOne({slug,user:target_user._id})
+    if(!target_blog_data){
+        return next(new ErrorResponse(`Blog:${slug} of User:${username} isn't exist in the database`,404))
+    }
+    return res.status(200).json({ success: true, data: target_blog_data });
+})
+
