@@ -70,3 +70,8 @@ export const loginUser = asyncWrap(async function(req, res, next) {
 
 	res.status(200).json({ success: true, data: user });
 })
+
+
+export const getProfileData = asyncWrap(async function(req, res, next) {
+	return res.status(200).json({ success: true, data: req.user });
+})

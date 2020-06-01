@@ -1,9 +1,11 @@
 import express from 'express';
 const router = express.Router();
 
-import { registerUser,loginUser } from '../controllers/authorization';
+import { registerUser,loginUser,getProfileData } from '../controllers/authorization';
 
-router.route('/').post(registerUser);
+import {protect} from '../middleware/authorization'
+
+router.route('/').post(registerUser).get(protect,getProfileData);
 router.route('/login').post(loginUser);
 
 export default router;
