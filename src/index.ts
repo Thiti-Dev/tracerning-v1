@@ -27,6 +27,7 @@ var store = new MongoDBStore({
 
 //@routes-importing
 import authorization from './routes/authorization';
+import blogs from './routes/blogs';
 
 //@middleware-importing
 import errHandler from './middleware/errorHandler'
@@ -61,6 +62,7 @@ const run_server = (async () => {
 	// ─── SET UP ROUTE ───────────────────────────────────────────────────────────────
 	//
 	app.use('/api/authorization', authorization);
+	app.use('/api/blogs', blogs);
 	// ────────────────────────────────────────────────────────────────────────────────
 
 	//@Error-Handler
