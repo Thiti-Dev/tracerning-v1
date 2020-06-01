@@ -28,6 +28,11 @@ export const createBlog = asyncWrap(async function(req, res, next) {
 	return res.status(200).json({ success: true, data: blog_created });
 })
 
+export const getAllBlogs = asyncWrap(async function(req,res,next){
+    const blogs = await Blog.find().sort('-createdAt').populate({path:'user',select:'email username photo'})
+    return res.status(200).json({ success: true, data: blogs });
+})
+
 export const getBlogOfUser = asyncWrap(async function(req,res,next){
     const {username} = req.params
     const target_user = await User.findOne({username})
