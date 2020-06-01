@@ -8,6 +8,9 @@ import ErrorResponse from '../utils/errorResponse'
 import User from '../db/models/User'
 import Blog from '../db/models/Blog';
 
+//@Utils import
+import objectKeyFilter from '../utils/objectKeyFilter'
+
 //
 // ─── INTERFACES ─────────────────────────────────────────────────────────────────
 //
@@ -55,4 +58,11 @@ export const deleteBlog = asyncWrap(async function(req,res,next){
     const remove_res = await Blog.findByIdAndRemove(blogId)
     return res.status(200).json({ success: true, data: remove_res });
 })
+
+export const editBlog = asyncWrap(async function(req,res,next){
+    const {blogId} = req.params
+    const update_res = await Blog.findOneAndUpdate({_id:blogId},objectKeyFilter(req.body,['title','content']),{new:true,runValidators:true}) // 've been avoid using findByIdAndUpdate because it's not gonna trigger the hook of the mongoose
+    return res.status(200).json({ success: true, data: update_res });
+})
+
 
