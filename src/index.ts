@@ -15,6 +15,22 @@ import * as logger from './utils/dev/logger';
 //@database
 import connectDatabase from './db/index';
 
+//@Session
+import session from 'express-session'
+
+//@Declare&Import persist session by connecting to mongoose
+var MongoDBStore = require('connect-mongodb-session')(session);
+var store = new MongoDBStore({
+	uri: process.env.MONGO_URI,
+	collection: 'cachedSessions'
+  });
+
+//@routes-importing
+import authorization from './routes/authorization';
+
+//@middleware-importing
+import errHandler from './middleware/errorHandler'
+
 const app = express();
 
 const run_server = (async () => {
@@ -26,8 +42,29 @@ const run_server = (async () => {
 	if (process.env.NODE_ENV === 'development') {
 		app.use(morgan('dev'));
 	}
+	app.use(express.json()); //embedded parser
+
+	app.use(session({ 
+		secret: 'super secret', 
+		resave: false, 
+		saveUninitialized: true,
+		cookie: {
+			maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+		  },
+		  store: store,
+	   })
+	  )
 
 	// ────────────────────────────────────────────────────────────────────────────────
+
+	//
+	// ─── SET UP ROUTE ───────────────────────────────────────────────────────────────
+	//
+	app.use('/api/authorization', authorization);
+	// ────────────────────────────────────────────────────────────────────────────────
+
+	//@Error-Handler
+	app.use(errHandler)
 
 	//
 	// ─── SERVER LISTENER ────────────────────────────────────────────────────────────
