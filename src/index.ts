@@ -32,9 +32,24 @@ import blogs from './routes/blogs';
 //@middleware-importing
 import errHandler from './middleware/errorHandler'
 
+//@Cross origin
+import cors from 'cors'
+
 const app = express();
 
 const run_server = (async () => {
+
+	//
+	// ─── CORS ───────────────────────────────────────────────────────────────────────
+	//
+	app.use(cors({
+		preflightContinue: true,
+		credentials: true
+	}))
+	// ────────────────────────────────────────────────────────────────────────────────
+
+
+
 	await connectDatabase(); //connect to the database
 
 	//
