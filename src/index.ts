@@ -43,8 +43,9 @@ const run_server = (async () => {
 	// ─── CORS ───────────────────────────────────────────────────────────────────────
 	//
 	app.use(cors({
-		preflightContinue: true,
-		credentials: true
+		//preflightContinue: true,
+		credentials: true,
+		origin:'http://localhost:4200'
 	}))
 	// ────────────────────────────────────────────────────────────────────────────────
 
