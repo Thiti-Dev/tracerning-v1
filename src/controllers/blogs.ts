@@ -33,6 +33,15 @@ export const getAllBlogs = asyncWrap(async function(req,res,next){
     return res.status(200).json({ success: true, data: blogs });
 })
 
+export const getSpecificBlogData = asyncWrap(async function(req,res,next){
+    const {blogId} = req.params
+    const target_blog_data = await Blog.findById(blogId)
+    if(!target_blog_data){
+        return next(new ErrorResponse(`Blog_id:${blogId} isn't exist in the database`,404))
+    }
+    return res.status(200).json({ success: true, data: target_blog_data });
+})
+
 export const getBlogOfUser = asyncWrap(async function(req,res,next){
     const {username} = req.params
     const target_user = await User.findOne({username})
@@ -44,7 +53,7 @@ export const getBlogOfUser = asyncWrap(async function(req,res,next){
 })
 
 
-export const getBlogData = asyncWrap(async function(req,res,next){
+export const getBlogDataOfUser = asyncWrap(async function(req,res,next){
     const {username,slug} = req.params
     const target_user = await User.findOne({username})
     if(!target_user){
