@@ -29,8 +29,24 @@ export const createBlog = asyncWrap(async function(req, res, next) {
 })
 
 export const getAllBlogs = asyncWrap(async function(req,res,next){
-    const blogs = await Blog.find().sort('-createdAt').populate({path:'user',select:'email username photo'})
-    return res.status(200).json({ success: true, data: blogs });
+
+    //
+    // ─── PAGINATION ─────────────────────────────────────────────────────────────────
+    //
+    const pageSize = +req.query.pagesize!;
+    const currentPage = +req.query.page!;
+    const blogQuery = Blog.find();
+    if(pageSize && currentPage){
+        blogQuery.skip(pageSize * (currentPage - 1)).limit(pageSize)
+    }
+    // ────────────────────────────────────────────────────────────────────────────────
+
+    //Counting total post
+    const totalBlogs = await Blog.count({})
+
+
+    const blogs = await blogQuery.sort('-createdAt').populate({path:'user',select:'email username photo'})
+    return res.status(200).json({ success: true, data: blogs,total:totalBlogs });
 })
 
 export const getSpecificBlogData = asyncWrap(async function(req,res,next){
