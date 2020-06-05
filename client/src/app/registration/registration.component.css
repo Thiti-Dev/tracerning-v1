@@ -1,0 +1,78 @@
+.outer-body {
+	width: 100%;
+	height: 100vh;
+}
+
+.main_holder {
+	display: flex;
+	flex-direction: column;
+	align-content: space-between;
+	justify-content: space-between;
+}
+
+.main_holder > div {
+	/* text-align: center; */
+	/* padding: 20px 0;
+	margin: 5px; */
+}
+
+.main_holder > div.image_display {
+	background-image: url(./images/rocket_book.jpg);
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100vh;
+}
+
+.form-container {
+	width: 50%;
+	/* background-color: green; */
+	margin: 0 auto;
+}
+
+input {
+	width: 100%;
+}
+
+:host ::ng-deep .clr-input-group-icon-action {
+	margin-left: 1rem !important;
+}
+
+button {
+	margin-top: 2rem;
+	float: right;
+}
+
+@media (max-width: 767px) {
+	.main_holder > div {
+		/* text-align: center; */
+		padding: 20px 0;
+		margin: 5px;
+	}
+	.main_holder > div.image_display {
+		height: 50vh;
+	}
+}
+
+@media (min-width: 768px) {
+	.main_holder {
+		flex-flow: row nowrap;
+	}
+	.main_holder > div {
+		width: 50% !important;
+	}
+	.main_holder > .left {
+		order: 1;
+	}
+	.main_holder > .right {
+		order: 2;
+	}
+
+	.outer-body {
+		overflow: hidden;
+	}
+
+	.form-container {
+		margin-top: 30vh;
+	}
+}
