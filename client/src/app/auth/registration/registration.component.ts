@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   FormGroup,
   FormControl,
@@ -7,7 +8,10 @@ import {
   AbstractControl,
 } from '@angular/forms';
 
-import { RegisterCredential } from './registration.model';
+import { RegisterCredential, ErrorRender } from './registration.model';
+import { AuthService } from '../auth.service';
+
+import { ClrLoadingState } from '@clr/angular';
 
 @Component({
   selector: 'app-registration',
@@ -16,16 +20,38 @@ import { RegisterCredential } from './registration.model';
 })
 export class RegistrationComponent implements OnInit {
   form: FormGroup;
-  constructor() {}
+  errors: ErrorRender = {};
+  blackListedEmail: string[] = [];
+  isLoading: ClrLoadingState = ClrLoadingState.DEFAULT;
+  constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
       username: new FormControl('', { validators: Validators.required }),
-      email: new FormControl('', { validators: Validators.required }),
+      email: new FormControl('', {
+        validators: [
+          Validators.required,
+          (control) => {
+            if (
+              this.errors.email ||
+              this.blackListedEmail.includes(control.value)
+            )
+              return { duplicatedEmail: true };
+            return null;
+          },
+        ],
+      }),
       password: new FormControl('', { validators: Validators.required }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required, this.matchValues('password')],
       }),
+    });
+
+    this.form.controls.email.valueChanges.subscribe((): void => {
+      if (this.errors.email) {
+        this.errors.email = false;
+        this.form.controls.confirmPassword.updateValueAndValidity();
+      }
     });
 
     this.form.controls.password.valueChanges.subscribe((): void => {
@@ -53,6 +79,12 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
+  setDuplicateEmailError() {
+    this.blackListedEmail.push(this.form.value.email); // push current email to the black listed one
+    this.errors.email = 'This email is already exist';
+    this.form.controls.email.updateValueAndValidity();
+  }
+
   //
   // ─── MAIN ───────────────────────────────────────────────────────────────────────
   //
@@ -68,6 +100,27 @@ export class RegistrationComponent implements OnInit {
       password,
       username,
     };
+    this.isLoading = ClrLoadingState.LOADING;
+    this.authService
+      .API_REGISTER(registrationRequestBody)
+      .subscribe(
+        (res) => {
+          //Successfully Registered
+          setTimeout(() => {
+            this.router.navigateByUrl('/login');
+          }, 500);
+        },
+        (err) => {
+          if (err.error.code === 1) {
+            console.log('This email already existed');
+            this.setDuplicateEmailError();
+          }
+        }
+      )
+      .add(() => {
+        this.isLoading = ClrLoadingState.SUCCESS;
+        console.log('done');
+      });
   }
   // ────────────────────────────────────────────────────────────────────────────────
 }

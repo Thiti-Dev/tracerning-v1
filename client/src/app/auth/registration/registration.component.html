@@ -19,12 +19,14 @@
           <clr-input-container>
               <label>Email</label>
               <input clrInput type="text" required formControlName="email" autocomplete="off"/>
-              <clr-control-error>
+              <clr-control-error *clrIfError="'required'">Please enter your email!</clr-control-error>
+              <clr-control-error *clrIfError="'duplicatedEmail'">This email is already existed!</clr-control-error>
+              <!-- <clr-control-error>
                 <span *ngFor="let error of getErrorList(form.controls.email.errors)">
-                  {{error === 'required' && 'Please enter your email'}}
+                  {{error === 'required' ? 'Please enter your email' : null}}
                   <br>
                 </span>
-              </clr-control-error>
+              </clr-control-error> -->
           </clr-input-container>
           <clr-password-container>
             <label>Password</label>
@@ -51,7 +53,7 @@
             </span>
           </clr-control-error> -->
       </clr-password-container>
-        <button class="btn btn-primary" type="submit" >Confirm</button>
+        <button [clrLoading]="this.isLoading" class="btn btn-primary" type="submit" >Confirm</button>
         <button class="btn btn-outline" type="button">Cancel</button>
         </div>
 

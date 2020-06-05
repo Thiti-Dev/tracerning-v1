@@ -3,3 +3,7 @@ export interface RegisterCredential {
   email: string;
   password: string;
 }
+
+export interface ErrorRender {
+  email?: boolean | string;
+}
