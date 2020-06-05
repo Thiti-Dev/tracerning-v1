@@ -1,0 +1,61 @@
+<div class="outer-body">
+  <div class="main_holder">
+    <div class="left image_display">
+    </div>
+    <div class="right">
+      <form clrForm clrLayout="horizontal" [formGroup]="form" (submit)="formSubmitHandler()">
+        <div class="form-container">
+          <clr-input-container>
+            <label>Username</label>
+            <input clrInput type="text" required formControlName="username" autocomplete="off"/>
+            <clr-control-helper>This will be your displayed name on your profile</clr-control-helper>
+            <clr-control-error>
+              <span *ngFor="let error of getErrorList(form.controls.username.errors)">
+                {{error === 'required' && 'Please enter your username'}}
+                <br>
+              </span>
+            </clr-control-error>
+        </clr-input-container>
+          <clr-input-container>
+              <label>Email</label>
+              <input clrInput type="text" required formControlName="email" autocomplete="off"/>
+              <clr-control-error>
+                <span *ngFor="let error of getErrorList(form.controls.email.errors)">
+                  {{error === 'required' && 'Please enter your email'}}
+                  <br>
+                </span>
+              </clr-control-error>
+          </clr-input-container>
+          <clr-password-container>
+            <label>Password</label>
+            <input clrPassword required formControlName="password" autocomplete="off"/>
+            <clr-control-error *clrIfError="'required'">This field is required!</clr-control-error>
+            <clr-control-error *clrIfError="'minlength'">It must be at least 8 characters!</clr-control-error>
+            <!-- <clr-control-error>
+              <span *ngFor="let error of getErrorList(form.controls.password.errors)">
+                {{error === 'required' && 'Please enter your password'}}
+                <br>
+              </span>
+            </clr-control-error> -->
+        </clr-password-container>
+        <clr-password-container>
+          <label>Confirm Password</label>
+          <input clrPassword required formControlName="confirmPassword" autocomplete="off"/>
+          <clr-control-error  *clrIfError="'required'">Please re-enter your password above!</clr-control-error>
+          <clr-control-error *clrIfError="'notIsMatching'">Password is not match!</clr-control-error>
+          <!-- <clr-control-error>
+            <span *ngFor="let error of getErrorList(form.controls.confirmPassword.errors)">
+              {{error === 'required' ? 'Please enter confirmPassword' : null}}
+              {{error === 'isMatching' ? 'Password is not match' : null}}
+              <br>
+            </span>
+          </clr-control-error> -->
+      </clr-password-container>
+        <button class="btn btn-primary" type="submit" >Confirm</button>
+        <button class="btn btn-outline" type="button">Cancel</button>
+        </div>
+
+    </form>
+    </div>
+  </div>
+</div>
