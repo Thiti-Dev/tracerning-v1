@@ -9,6 +9,8 @@ import { ClarityModule } from '@clr/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegistrationComponent } from './auth/registration/registration.component';
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [AppComponent, RegistrationComponent],
   imports: [
@@ -17,6 +19,7 @@ import { RegistrationComponent } from './auth/registration/registration.componen
     ClarityModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
